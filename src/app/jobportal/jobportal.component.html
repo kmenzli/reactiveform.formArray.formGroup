@@ -1,0 +1,91 @@
+<div class="container">
+  <legend>Job Portal</legend>
+  <div class="row">
+    <div class="col col-md-8" style="overflow-y: scroll; max-height: 100vh">
+      <form [formGroup]="jobForm" (ngSubmit)="save()">
+        <div class="mb-3">
+          <label for="firstName" class="form-label">First Name</label>
+          <input type="text" class="form-control" id="firstName" formControlName="firstName" />
+          <div class="alert alert-danger" *ngIf="firstName?.invalid && (firstName?.touched || firstName?.dirty)">
+            <div *ngIf="firstName?.errors?.['required']">First Name can't be emtpy</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input type="text" class="form-control" id="lastName" formControlName="lastName" />
+        </div>
+        <div class="mb-3" formGroupName="contacts">
+          <div class="row">
+            <div class="col col-md-4 offset-md-4">
+              <div class="mb-3">
+                <label class="form-label">Prefered Contact</label>
+                <select class="form-select" formControlName="contactType" aria-label="Default select example">
+                  <option value="-1">-select-</option>
+                  <option value="email">Email</option>
+                  <option value="phone">Phone</option>
+                </select>
+              </div>
+              <div class="alert alert-danger" *ngIf="contactType?.invalid && (contactType?.touched || contactType?.dirty)">
+                <div *ngIf="contactType?.errors?.['emailOrPhoneRequired']">Either email or phone need to selected</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-md-6">
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" formControlName="email" />
+              </div>
+            </div>
+            <div class="col col-md-6">
+              <div class="mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="text" class="form-control" id="phone" formControlName="phone" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mb-3" formArrayName="skills">
+          <div class="row">
+            <div class="col col-md-4 offset-md-4">
+              <button type="button" (click)="addASkillFormGroup()" class="btn btn-primary">Add A Skill</button>
+            </div>
+          </div>
+          <ng-container *ngFor="let skillForm of skillsForms.controls; let i = index">
+            <div class="row" [formGroupName]="i">
+              <div class="col col-md-5">
+                <div class="mb-3">
+                  <label [for]="'programLanguage' + i" class="form-label">Programing Language</label>
+                  <input type="text" class="form-control" [id]="'programLanguage' + i" formControlName="programLanguage" />
+                </div>
+                <div
+                  class="alert alert-danger"
+                  *ngIf="
+                    getProgramingLagnuage(i)?.invalid && (getProgramingLagnuage(i)?.touched || getProgramingLagnuage(i)?.dirty)
+                  "
+                >
+                  <div *ngIf="getProgramingLagnuage(i)?.errors?.['required']">Known programing skill can't be empty</div>
+                </div>
+              </div>
+              <div class="col col-md-5">
+                <div class="mb-3">
+                  <label [for]="'experience' + i" class="form-label">Experience</label>
+                  <input type="text" class="form-control" [id]="'experience' + i" formControlName="experience" />
+                </div>
+              </div>
+              <div class="col col md-2">
+                <button class="btn btn-danger mt-4" type="button" (click)="removeSkillFormGroup(i)">Delete</button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <button type="button" class="btn btn-primary mt-4" (click)="sampleSetValues()">Test SetValue()</button>
+      <button type="button" class="btn btn-primary mt-4" (click)="samplePatchValues()">Test PatchValue()</button>
+    </div>
+    <div class="col col-md-4">
+      <div style="position: fixed">{{ preview }}</div>
+    </div>
+  </div>
+</div>
